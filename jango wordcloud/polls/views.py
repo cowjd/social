@@ -7,10 +7,9 @@ from django.urls import reverse
 from django.views import generic
 from .models import Choice, Question
 
-from wordcloud import WordCloud
+
 import matplotlib.pyplot as plt
-
-
+from wordcloud import WordCloud
 from collections import Counter
 
 import pandas as pd
@@ -18,10 +17,13 @@ from konlpy.tag import Hannanum
 
 import requests
 from bs4 import BeautifulSoup
+import json
+import re
+import sys
 import time
 import random
 import pandas as pd
-
+import pymysql
 
 
 class IndexView(generic.ListView):
@@ -74,13 +76,8 @@ def showwordcloud(request):
     query = request.POST['query']
 
 
-    get_newsdetail(query)
-
-
-    # wordcloud 그리기
+        # wordcloud 그리기
     hannanum = Hannanum()
-
-
 
     f = open('news_text.txt', 'r', encoding='UTF8')
     lines = f.readlines()
@@ -106,17 +103,11 @@ def showwordcloud(request):
 
     count = Counter(word_list)
     wordcloud = wordcloud.generate_from_frequencies(count)
-    # array = wordcloud.to_array()
-    # wordcloud.to_array()
+    array = wordcloud.to_array()
 
-    
-    # wordcloud = WordCloud().generate(count)  # generate 에러남
-    plt.imshow(wordcloud, interpolation='bilinear')
-    plt.axis("off")
-    # plt.show() # 사이트에 사진이 뜨지 않고 따로 사진 창이 따로 뜸
-    plt.savefig('polls/static/polls/images/wordcloud.png')
-
-    
+    # fig = plt.figure(figsize=(10,10))
+    # plt.imshow(array, interpolation="bilinear")
+    # fig.savefig('wordcloud.png')
 
 
     context = {"query": query}
@@ -137,11 +128,11 @@ def get_news(n_url):
 
     return news_detail
 
-def get_newsdetail(query):
+def get_newsdetail():
     columns = ['내용']
     df = pd.DataFrame(columns=columns)
 
-    # query = '코로나'   # url 인코딩 에러는 encoding parse.quote(query)
+    query = '코로나'   # url 인코딩 에러는 encoding parse.quote(query)
     s_date = "2022.05.01"
     e_date = "2022.06.04"
     s_from = s_date.replace(".", "")
@@ -190,7 +181,7 @@ def get_newsdetail(query):
     
         page += 10
 
-    df.to_csv('news_text.txt')
+    # df.to_csv('news_text.txt')
 
 
 
@@ -204,8 +195,6 @@ def flatten(l):
                 else:
                     flatList.append(elem)
             return flatList
-
-
 
 
 
