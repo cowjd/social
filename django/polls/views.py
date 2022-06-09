@@ -143,7 +143,7 @@ def get_newsdetail(query):
 
     # query = '코로나'   # url 인코딩 에러는 encoding parse.quote(query)
     s_date = "2022.05.01"
-    e_date = "2022.06.04"
+    e_date = "2022.06.05"
     s_from = s_date.replace(".", "")
     e_to = e_date.replace(".", "")
     page = 1
