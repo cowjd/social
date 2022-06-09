@@ -114,8 +114,6 @@ def showwordcloud(request):
     return render(request, 'polls/showwordcloud.html', context)
 
 
-
-
 def get_news(n_url):
     news_detail = []
     print(n_url)
